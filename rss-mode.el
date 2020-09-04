@@ -7,7 +7,9 @@
   "View list of RSS entries"
   (setq-local tabulated-list-format [("Source" 18 t)("Title" 18 t)])
   (setq-local tabulated-list-sort-key (cons "Title" nil))
-  (tabulated-list-init-header))
+  (setq-local tabulated-list-entries (rss-entries))
+  (tabulated-list-init-header)
+  (tabulated-list-print t))
 
 (setq rss-entry-mode-map (make-sparse-keymap))
 (define-key rss-entry-mode-map (kbd "q") 'kill-buffer-and-window)
@@ -27,27 +29,25 @@
   (apply 'concat (xml-node-children node)))
 
 (defun rss-entry-feed-filename (file)
-  (concat rss-dir "../.meta/" (car (split-string file "-")) ".xml"))
+  (concat default-directory "../.meta/" (car (split-string file "-")) ".xml"))
 
 (defun rss-entry-feed (file)
   (xml-nodes-content (xml-find-by-tag 'title (car (xml-parse-file (rss-entry-feed-filename file))))))
 
 (defun rss-entry-title (file)
-  (xml-nodes-content (xml-find-by-tag 'title (car (xml-parse-file (concat rss-dir file))))))
+  (xml-nodes-content (xml-find-by-tag 'title (car (xml-parse-file (concat default-directory file))))))
 
 (defun rss-entry-published-at (file)
   (xml-nodes-content
    (or
-    (xml-find-by-tag 'pubDate (car (xml-parse-file (concat rss-dir file))))
-    (xml-find-by-tag 'published (car (xml-parse-file (concat rss-dir file))))
-    )))
+    (xml-find-by-tag 'pubDate (car (xml-parse-file (concat default-directory file))))
+    (xml-find-by-tag 'published (car (xml-parse-file (concat default-directory file)))))))
 
 (defun rss-entry-content (file)
   (xml-nodes-content
    (or
-    (xml-find-by-tag 'description (car (xml-parse-file (concat rss-dir file))))
-    (xml-find-by-tag 'content (car (xml-parse-file (concat rss-dir file))))
-    )))
+    (xml-find-by-tag 'description (car (xml-parse-file (concat default-directory file))))
+    (xml-find-by-tag 'content (car (xml-parse-file (concat default-directory file)))))))
 
 (defun rss-entry (file)
   (list file (vector (rss-entry-feed file) (rss-entry-title file))))
@@ -55,12 +55,11 @@
 (defun is-dots (file)
   (member file '("." "..")))
 
-(defun rss-entries (path)
-  (mapcar 'rss-entry
-          (seq-remove 'is-dots (directory-files path))))
+(defun rss-entries ()
+  (mapcar 'rss-entry (seq-remove 'is-dots (directory-files default-directory))))
 
 (defun rss-list-entry-file ()
-     (concat rss-dir (tabulated-list-get-id)))
+  (concat default-directory (tabulated-list-get-id)))
 
 (defun rss-label-string (str)
   (propertize str 'font-lock-face '(:foreground "orange")))
@@ -73,7 +72,7 @@
 
 (defun rss-move-entry (file destination-dir)
   (ensure-directory destination-dir)
-  (rename-file (concat rss-dir file) (concat destination-dir file)))
+  (rename-file (concat default-directory file) (concat destination-dir file)))
 
 (defun rss-delete-entry (file)
   "Delete the RSS entry file and create an empty file with the
@@ -82,7 +81,7 @@ when refreshing RSS feeds, Use this if you don't want to keep the
 RSS entry on your desk, otherwise Archiving it is the way to go"
   (ensure-directory rss-trash-dir)
   (write-region "" nil (concat rss-trash-dir file))
-  (delete-file (concat rss-dir file)))
+  (delete-file (concat default-directory file)))
 
 (defun rss-archive-current-entry ()
   "Moved the RSS entry to the rss-archive-dir"
@@ -121,12 +120,11 @@ RSS entry on your desk, otherwise Archiving it is the way to go"
     (goto-char (point-min))
     (rss-entry-mode)))
 
+(setq rss-archive-dir "~/rss/archive/")
+(setq rss-trash-dir "~/rss/trash/")
+(setq rss-dir "~/rss/INBOX")
+
 (defun rss-entries-list ()
   (interactive)
-  (switch-to-buffer "*RSS*")
-  (setq rss-dir "~/rss/INBOX/")
-  (setq rss-archive-dir "~/rss/archive/")
-  (setq rss-trash-dir "~/rss/trash/")
-  (setq tabulated-list-entries (rss-entries rss-dir))
-  (rss-mode)
-  (tabulated-list-print t))
+  (find-file rss-dir)
+  (rss-mode))
