@@ -2,7 +2,7 @@ Emacs RSS Major Mode
 ====================
 
 This is an Emacs major modes for
-- RSS Mode: shows a list of RSS entries that's a result of
+- RSS Directory Mode: shows a list of RSS entries that's a result of
   [offlinerss](https://github.com/emad-elsaid/offlinerss)
 - RSS Entry Mode: Renders a RSS entry file
 

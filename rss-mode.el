@@ -1,9 +1,9 @@
-(setq rss-mode-map (make-sparse-keymap))
-(define-key rss-mode-map (kbd "RET") 'rss-open-entry)
-(define-key rss-mode-map (kbd "r") 'rss-archive-current-entry)
-(define-key rss-mode-map (kbd "D") 'rss-delete-current-entry)
+(setq rss-directory-mode-map (make-sparse-keymap))
+(define-key rss-directory-mode-map (kbd "RET") 'rss-open-entry)
+(define-key rss-directory-mode-map (kbd "r") 'rss-archive-current-entry)
+(define-key rss-directory-mode-map (kbd "D") 'rss-delete-current-entry)
 
-(define-derived-mode rss-mode tabulated-list-mode "RSS"
+(define-derived-mode rss-directory-mode tabulated-list-mode "RSS"
   "View list of RSS entries"
   (setq-local tabulated-list-format [("Source" 18 t)("Title" 18 t)])
   (setq-local tabulated-list-sort-key (cons "Title" nil))
@@ -127,4 +127,4 @@ RSS entry on your desk, otherwise Archiving it is the way to go"
 (defun rss-entries-list ()
   (interactive)
   (find-file rss-dir)
-  (rss-mode))
+  (rss-directory-mode))
