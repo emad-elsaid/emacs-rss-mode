@@ -74,9 +74,6 @@
 (defun rss-entries ()
   (mapcar 'rss-entry (seq-remove 'is-dots (directory-files default-directory))))
 
-(defun rss-list-entry-file ()
-  (concat default-directory (tabulated-list-get-id)))
-
 (defun rss-label-string (str)
   (propertize str 'font-lock-face '(:foreground "orange")))
 
