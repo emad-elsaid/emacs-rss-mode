@@ -4,6 +4,7 @@
 (setq rss-archive-dir "~/rss/archive/")
 (setq rss-trash-dir "~/rss/trash/")
 (setq rss-dir "~/rss/INBOX")
+(setq rss-entry-buffer-name "*RSS Entry*")
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Modes and keymaps
@@ -25,7 +26,24 @@
 (define-key rss-mode-map (kbd "q") 'kill-buffer-and-window)
 
 (define-derived-mode rss-mode special-mode "RSS"
-  "View one RSS entry")
+  "View one RSS entry"
+  (read-only-mode)
+  (let ((inhibit-read-only t)
+        (entry (file-name-nondirectory buffer-file-name)))
+    (erase-buffer)
+    (rename-buffer (rss-entry-title entry))
+    (insert (rss-label-string "Feed: ") (rss-entry-feed entry) "\n"
+            (rss-label-string "Title: ") (rss-entry-title entry) "\n"
+            (rss-label-string "Published at: ") (rss-entry-published-at entry) "\n"
+            "\n")
+    (let ((start (point)))
+      (insert (rss-entry-content entry))
+      (shr-render-region start (point-max)))
+    (goto-char (point-min)))
+  (read-only-mode)
+  (not-modified))
+
+(add-to-list 'auto-mode-alist '("\\.rss\\'" . rss-mode))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; XML complementary functions
@@ -45,7 +63,7 @@
 ;; Main functions
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 (defun rss-entry-feed-filename (file)
-  (concat default-directory "../.meta/" (car (split-string file "-")) ".xml"))
+  (concat default-directory "../.meta/" (car (split-string file "-")) ".rss"))
 
 (defun rss-entry-feed (file)
   (xml-nodes-content (xml-find-by-tag 'title (car (xml-parse-file (rss-entry-feed-filename file))))))
@@ -122,19 +140,8 @@ RSS entry on your desk, otherwise Archiving it is the way to go"
 
 (defun rss-open-entry ()
   (interactive)
-  (let ((entry (tabulated-list-get-id)))
-    (find-window-or-split-right "*RSS Entry*")
-    (kill-buffer-if-exists "*RSS Entry*")
-    (pop-to-buffer-same-window "*RSS Entry*")
-    (insert (rss-label-string "Feed: ") (rss-entry-feed entry) "\n"
-            (rss-label-string "Title: ") (rss-entry-title entry) "\n"
-            (rss-label-string "Published at: ") (rss-entry-published-at entry) "\n"
-            "\n")
-    (let ((start (point)))
-      (insert (rss-entry-content entry))
-      (shr-render-region start (point-max)))
-    (goto-char (point-min))
-    (rss-mode)))
+  (find-file-other-window (concat default-directory (tabulated-list-get-id)))
+  (rss-mode))
 
 (defun rss-entries-list ()
   (interactive)
