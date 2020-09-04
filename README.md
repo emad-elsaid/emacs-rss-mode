@@ -20,3 +20,20 @@ spacemacs configuration
 ```elisp
 (spacemacs/set-leader-keys "S" 'rss-entries-list)
 ```
+
+## Keybinding
+
+In RSS directory buffer
+
+| Key | Function                  |
+|-----|---------------------------|
+| q   | Quit RSS directory buffer |
+| r   | Archive current RSS entry |
+| D   | Delete current RSS entry  |
+| RET | Open current RSS entry    |
+
+In RSS Entry buffer
+
+| Key | Function        |
+|-----|-----------------|
+| q   | Quit RSS buffer |
