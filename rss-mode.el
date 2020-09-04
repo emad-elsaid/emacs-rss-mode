@@ -1,9 +1,19 @@
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; Variables
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+(setq rss-archive-dir "~/rss/archive/")
+(setq rss-trash-dir "~/rss/trash/")
+(setq rss-dir "~/rss/INBOX")
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; Modes and keymaps
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 (setq rss-directory-mode-map (make-sparse-keymap))
 (define-key rss-directory-mode-map (kbd "RET") 'rss-open-entry)
 (define-key rss-directory-mode-map (kbd "r") 'rss-archive-current-entry)
 (define-key rss-directory-mode-map (kbd "D") 'rss-delete-current-entry)
 
-(define-derived-mode rss-directory-mode tabulated-list-mode "RSS"
+(define-derived-mode rss-directory-mode tabulated-list-mode "RSS Dir"
   "View list of RSS entries"
   (setq-local tabulated-list-format [("Source" 18 t)("Title" 18 t)])
   (setq-local tabulated-list-sort-key (cons "Title" nil))
@@ -11,12 +21,15 @@
   (tabulated-list-init-header)
   (tabulated-list-print t))
 
-(setq rss-entry-mode-map (make-sparse-keymap))
-(define-key rss-entry-mode-map (kbd "q") 'kill-buffer-and-window)
+(setq rss-mode-map (make-sparse-keymap))
+(define-key rss-mode-map (kbd "q") 'kill-buffer-and-window)
 
-(define-derived-mode rss-entry-mode special-mode "RSS Entry"
+(define-derived-mode rss-mode special-mode "RSS"
   "View one RSS entry")
 
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; XML complementary functions
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 (defun xml-node-list-children (node)
   (seq-filter 'listp (xml-node-children node)))
 
@@ -28,6 +41,9 @@
 (defun xml-nodes-content (node)
   (apply 'concat (xml-node-children node)))
 
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; Main functions
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 (defun rss-entry-feed-filename (file)
   (concat default-directory "../.meta/" (car (split-string file "-")) ".xml"))
 
@@ -83,6 +99,9 @@ RSS entry on your desk, otherwise Archiving it is the way to go"
   (write-region "" nil (concat rss-trash-dir file))
   (delete-file (concat default-directory file)))
 
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; Interactive functions
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 (defun rss-archive-current-entry ()
   "Moved the RSS entry to the rss-archive-dir"
   (interactive)
@@ -118,11 +137,7 @@ RSS entry on your desk, otherwise Archiving it is the way to go"
       (insert (rss-entry-content entry))
       (shr-render-region start (point-max)))
     (goto-char (point-min))
-    (rss-entry-mode)))
-
-(setq rss-archive-dir "~/rss/archive/")
-(setq rss-trash-dir "~/rss/trash/")
-(setq rss-dir "~/rss/INBOX")
+    (rss-mode)))
 
 (defun rss-entries-list ()
   (interactive)
