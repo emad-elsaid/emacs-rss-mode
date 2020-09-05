@@ -8,7 +8,8 @@ This is an Emacs major modes for
 
 ## Usage
 
-Load `rss-mode.el` to your Emacs, and execute `rss-entries-list` function to
+- Use [offlinerss](https://github.com/emad-elsaid/offlinerss) to download RSS to your disk
+- Load `rss-mode.el` to your Emacs, and execute `rss-entries-list` function to
 show a list of RSS files in your RSS inbox under `~/rss/INBOX` where
 `offlinerss` saves them.
 
