@@ -86,11 +86,11 @@
 (defun rss-entry (file)
   (list file (vector (rss-entry-feed file) (rss-entry-title file))))
 
-(defun is-dots (file)
-  (member file '("." "..")))
+(defun is-hidden (file)
+  (eq ?. (string-to-char file)))
 
 (defun rss-entries ()
-  (mapcar 'rss-entry (seq-remove 'is-dots (directory-files default-directory))))
+  (mapcar 'rss-entry (seq-remove 'is-hidden (directory-files default-directory))))
 
 (defun rss-label-string (str)
   (propertize str 'font-lock-face '(:foreground "orange")))
