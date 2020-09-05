@@ -95,9 +95,6 @@
 (defun rss-label-string (str)
   (propertize str 'font-lock-face '(:foreground "orange")))
 
-(defun kill-buffer-if-exists (buffer)
-  (if (get-buffer buffer) (kill-buffer buffer)))
-
 (defun ensure-directory (path)
   (if (not (file-directory-p path)) (make-directory path)))
 
