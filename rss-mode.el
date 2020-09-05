@@ -129,12 +129,6 @@ RSS entry on your desk, otherwise Archiving it is the way to go"
         (rss-delete-entry (tabulated-list-get-id))
         (tabulated-list-delete-entry))))
 
-(defun find-window-or-split-right (buffer)
-  (let ((window (get-buffer-window buffer)))
-    (if window
-        (select-window window)
-      (split-window-right-and-focus))))
-
 (defun rss-open-entry ()
   (interactive)
   (find-file-other-window (concat default-directory (tabulated-list-get-id)))
