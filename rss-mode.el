@@ -60,7 +60,6 @@
 
 (define-derived-mode rss-mode special-mode "RSS"
   "View one RSS entry"
-  (read-only-mode)
   (let ((inhibit-read-only t)
         (entry (file-name-nondirectory buffer-file-name)))
     (erase-buffer)
@@ -73,7 +72,6 @@
       (insert (rss-entry-content entry))
       (shr-render-region start (point-max)))
     (goto-char (point-min)))
-  (read-only-mode)
   (not-modified))
 
 (add-to-list 'auto-mode-alist '("\\.rss\\'" . rss-mode))
