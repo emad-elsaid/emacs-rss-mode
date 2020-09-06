@@ -4,7 +4,7 @@
 
 ;; Author: Emad Elsaid <emad.elsaid.hamed@gmail.com>
 ;; Created: 5 September 2020
-;; Version: 0.1.0
+;; Version: 0.1.1
 ;; Keywords: News
 ;; Homepage: https://github.com/emad-elsaid/emacs-rss-mode
 
@@ -113,8 +113,9 @@
 (defun rss-entry-content (file)
   (xml-nodes-content
    (or
-    (xml-find-by-tag 'description (car (xml-parse-file (concat default-directory file))))
-    (xml-find-by-tag 'content (car (xml-parse-file (concat default-directory file)))))))
+    (xml-find-by-tag 'content:encoded (car (xml-parse-file (concat default-directory file))))
+    (xml-find-by-tag 'content (car (xml-parse-file (concat default-directory file))))
+    (xml-find-by-tag 'description (car (xml-parse-file (concat default-directory file)))))))
 
 (defun rss-entry (file)
   (list file (vector (rss-entry-feed file) (rss-entry-title file))))
