@@ -4,6 +4,7 @@
 
 ;; Author: Emad Elsaid <emad.elsaid.hamed@gmail.com>
 ;; Created: 5 September 2020
+;; Version: 0.1.0
 ;; Keywords: News
 ;; Homepage: https://github.com/emad-elsaid/emacs-rss-mode
 
@@ -35,10 +36,11 @@
 
 ;; Variables
 
-(setq rss-archive-dir "~/rss/archive/")
-(setq rss-trash-dir "~/rss/trash/")
-(setq rss-dir "~/rss/INBOX")
-(setq rss-entry-buffer-name "*RSS Entry*")
+(setq-default
+ rss-archive-dir "~/rss/archive/"
+ rss-trash-dir "~/rss/trash/"
+ rss-dir "~/rss/INBOX"
+ rss-entry-buffer-name "*RSS Entry*")
 
 ;; Modes and keymaps
 
@@ -169,4 +171,5 @@ RSS entry on your desk, otherwise Archiving it is the way to go"
   (interactive)
   (find-file rss-dir)
   (rss-directory-mode))
+
 (provide 'rss-mode)
