@@ -90,7 +90,7 @@
     (seq-find 'identity (mapcar (lambda (node) (xml-find-by-tag tag node)) (xml-node-list-children node)))))
 
 (defun xml-nodes-content (node)
-  (apply 'concat (xml-node-children node)))
+  (apply 'concat (mapcar 'string-trim (xml-node-children node))))
 
 
 ;; Main functions
