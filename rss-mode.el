@@ -68,12 +68,14 @@
     (rename-buffer (rss-entry-title entry))
     (insert (rss-label-string "Feed: ") (rss-entry-feed entry) "\n"
             (rss-label-string "Title: ") (rss-entry-title entry) "\n"
+            (rss-label-string "Link: ") (rss-entry-link entry) "\n"
             (rss-label-string "Published at: ") (rss-entry-published-at entry) "\n"
             "\n")
     (let ((start (point)))
       (insert (rss-entry-content entry))
       (shr-render-region start (point-max)))
     (goto-char (point-min)))
+  (goto-address-mode)
   (not-modified))
 
 (add-to-list 'auto-mode-alist '("\\.rss\\'" . rss-mode))
@@ -103,6 +105,9 @@
 
 (defun rss-entry-title (file)
   (xml-nodes-content (xml-find-by-tag 'title (car (xml-parse-file (concat default-directory file))))))
+
+(defun rss-entry-link (file)
+  (xml-nodes-content (xml-find-by-tag 'link (car (xml-parse-file (concat default-directory file))))))
 
 (defun rss-entry-published-at (file)
   (xml-nodes-content
