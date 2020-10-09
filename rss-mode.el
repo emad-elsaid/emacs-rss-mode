@@ -139,7 +139,7 @@
 
 (defun rss-move-entry (file destination-dir)
   (ensure-directory destination-dir)
-  (rename-file (concat default-directory file) (concat destination-dir file)))
+  (rename-file (concat default-directory file) (concat destination-dir file) t))
 
 (defun rss-delete-entry (file)
   "Delete the RSS entry file and create an empty file with the
