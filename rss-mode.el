@@ -46,6 +46,7 @@
 
 (setq rss-directory-mode-map (make-sparse-keymap))
 (define-key rss-directory-mode-map (kbd "RET") 'rss-open-entry)
+(define-key rss-directory-mode-map (kbd "o") 'rss-open-entry)
 (define-key rss-directory-mode-map (kbd "r") 'rss-archive-current-entry)
 (define-key rss-directory-mode-map (kbd "D") 'rss-delete-current-entry)
 
